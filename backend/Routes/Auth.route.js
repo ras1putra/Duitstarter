@@ -11,7 +11,7 @@ const client = require('../Helper/Redis.helper');
 router.post('/register', async (req, res, next) => {
     try {
         const { value, error} = registerSchema.validate(req.body);
-        if(error) { throw createError.BadRequest("Email or password or confirm password is not valid") };
+        if(error) { throw createError.BadRequest("Email or password is not valid, please check") };
 
         const checkUser = await prisma.user.findUnique({
             where: {
@@ -19,7 +19,7 @@ router.post('/register', async (req, res, next) => {
             }
         });
         if (checkUser) {
-            throw createError.Conflict(`${value.email} is already registered`);
+            throw createError.Conflict(`${value.email} sudah terdaftar, coba email lainnya`);
         };
 
         const salt = await bcrypt.genSalt(10);

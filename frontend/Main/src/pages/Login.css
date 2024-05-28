@@ -1,0 +1,7 @@
+.login-container {
+    background-image: url("../assets/waves.svg"); 
+    background-size: cover;
+    background-position: center; 
+    height: 100vh;
+    top: 0;
+}
