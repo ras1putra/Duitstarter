@@ -4,15 +4,15 @@
     background-position: center; 
     height: 100vh;
     top: 0;
+    z-index: 1;
 }
 
-/* Register.css */
 .glass-morphism {
     backdrop-filter: blur(80px); 
     box-shadow: 0 2px 2px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(12px); 
+    backdrop-filter: blur(20px); 
     border: 1px solid rgba(255, 255, 255, 0.18); 
-    backdrop-filter: blur(4px); 
+    backdrop-filter: blur(20px); 
 }
 
 .or-divider {
@@ -40,5 +40,21 @@
 .or-divider span {
     font-size: 14px;
     color: white;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(-100%);
+    }
+    80% {
+        transform: translateX(-20%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 0.5s ease-out;
 }
 

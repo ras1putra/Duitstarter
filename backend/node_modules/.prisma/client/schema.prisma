@@ -335,6 +335,9 @@ model user {
   isPublic             Boolean                @default(true)
   createdAt            DateTime               @default(now()) @db.Timestamptz(6)
   updatedAt            DateTime?              @default(now()) @db.Timestamptz(6)
+  username             String?                @db.VarChar(100)
+  avatar               Bytes?
+  isverified           Boolean?               @default(false)
   campaign             campaign[]
   community_chat       community_chat[]
   community_membership community_membership[]

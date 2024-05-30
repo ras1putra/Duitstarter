@@ -5,11 +5,14 @@ CREATE TYPE user_roles AS ENUM ('USER', 'FUNDRAISER', 'ADMIN');
 CREATE TABLE IF NOT EXISTS "user"
 (
     user_id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+    username VARCHAR(200),
     email VARCHAR(200) NOT NULL UNIQUE,
     phone VARCHAR(20),
     password VARCHAR(200) NOT NULL,
+    avatar bytea,
     roles user_roles NOT NULL DEFAULT 'USER',
     "isPublic" boolean NOT NULL DEFAULT true,
+    isVerified boolean NOT NULL DEFAULT false,
     "createdAt" timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );

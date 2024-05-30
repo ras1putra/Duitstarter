@@ -53,3 +53,34 @@ AFTER INSERT ON "transaction"
 FOR EACH ROW
 WHEN (NEW.transaction_status = 'SUCCESS')
 EXECUTE FUNCTION insert_investment_data();
+
+-- Fungsi untuk memperbarui kolom updatedAt saat ada perubahan pada baris
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW."updatedAt" = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Fungsi untuk mengatur kolom username berdasarkan email setelah insert
+CREATE OR REPLACE FUNCTION set_username_from_email()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.username = split_part(NEW.email, '@', 1);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger untuk memperbarui kolom updatedAt saat ada perubahan pada baris
+CREATE TRIGGER update_updated_at
+BEFORE UPDATE ON "user"
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger untuk mengatur kolom username berdasarkan email setelah insert
+CREATE TRIGGER set_username
+AFTER INSERT ON "user"
+FOR EACH ROW
+EXECUTE FUNCTION set_username_from_email();
+

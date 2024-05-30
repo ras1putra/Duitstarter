@@ -32,7 +32,7 @@ router.post('/register', async (req, res, next) => {
             }
         });
 
-        res.send("User registered successfully");
+        res.status(200).send("User registered successfully");
     } catch (error) {
         next(error)
     }
@@ -47,22 +47,28 @@ router.post('/login', async (req, res, next) => {
             }
         });
         if (!user) {
-            throw createError.NotFound("User not registered");
+            throw createError.NotFound("Tidak ada user terdaftar dengan email tersebut");
         };
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw createError.Unauthorized("Username/password not valid");
+            throw createError.Unauthorized("Email atau password salah");
         };
 
         const accessToken = await signAccessToken(user.user_id);
         const refreshToken = await signRefreshToken(user.user_id);
 
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            path: '/'
+        });
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             path: '/'
         });
-        res.send({ accessToken });
+
+        res.status(200).send("Success login");
     } catch (error) {
         if(error.isJoi === true) {
             return next(createError(400, 'Invalid email/password'))
@@ -71,31 +77,33 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-router.delete('/logout', async (req, res, next) => {
+router.delete('/logout', verifyRefreshToken, async (req, res, next) => {
     try {
-        const { refreshToken } = req.cookies;
-        if (!refreshToken) {
-            throw createError.BadRequest();
-        }
+        const userId = req.payload.aud;
+        await client.del(userId);
 
-        const userId = await verifyRefreshToken(refreshToken);
-        await client.del(userId)
-        res.send("success logout")
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        res.status(200).send("success logout");
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
 
-router.post('/refresh-token', async (req, res, next) => {
+router.post('/refresh-token', verifyRefreshToken, async (req, res, next) => {
     try {
-        const { refreshToken } = req.cookies;
-        const userId = await verifyRefreshToken(refreshToken);
-
+        const userId = req.payload.aud;
         const accessToken = await signAccessToken(userId);
-        res.send({ accessToken });
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            path: '/'
+        });
+        res.status(200).send({ accessToken });
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
+
 
 module.exports = router;

@@ -8,7 +8,7 @@ module.exports = {
             const payload = {};
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const options = {
-                expiresIn: '1h',
+                expiresIn: '15m',
                 issuer: 'localhost',
                 audience: userId
             };
@@ -21,15 +21,18 @@ module.exports = {
         });
     },
     verifyAccessToken: (req, res, next) => {
-        if (!req.headers['authorization']) return next(createError.Unauthorized());
-        const authHeader = req.headers['authorization'];
-        const bearerToken = authHeader.split(' ');
-        const token = bearerToken[1];
-
+        const token = req.cookies.accessToken;
+        if (!token) return next(createError.Unauthorized());
+    
         JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
             if (err) {
-                const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message;
-                return next(createError.Unauthorized(message));
+                if (err.name === 'JsonWebTokenError') {
+                    return next(createError.Unauthorized('Invalid token'));
+                } else if (err.name === 'TokenExpiredError') {
+                    return next(createError(403, 'Token expired'));
+                } else {
+                    return next(createError.Unauthorized('Unauthorized'));
+                }
             }
             req.payload = payload;
             next();
@@ -64,7 +67,10 @@ module.exports = {
             throw createError.InternalServerError();
         }
     },
-    verifyRefreshToken: async (refreshToken) => {
+    verifyRefreshToken: async (req, res, next) => {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) return next(createError.Unauthorized('No refresh token provided'));
+
         try {
             const payload = await new Promise((resolve, reject) => {
                 JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
@@ -72,17 +78,19 @@ module.exports = {
                     resolve(payload);
                 });
             });
-    
-            const userId = payload.aud;
-            const res = await client.get(userId); 
             
-            if (refreshToken === res) {
-                return userId;
+            const userId = payload.aud;
+            const storedToken = await client.get(userId); 
+            
+            if (refreshToken === storedToken) {
+                req.payload = payload;
+                next();
             } else {
-                throw createError.Unauthorized();
+                throw createError.Unauthorized('Refresh token mismatch');
             }
         } catch (err) {
-            throw createError.Unauthorized();
+            console.error('Failed to verify refresh token:', err);
+            next(createError.Unauthorized('Failed to verify refresh token'));
         }
     }
     
