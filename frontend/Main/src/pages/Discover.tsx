@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import CampaignCard from "../component/CampaignCard";
 
 const Discover: React.FC = () => {
+    const [activeTab, setActiveTab] = useState('BERLANGSUNG');
+
     return (
         <div>
             <div className="w-full bg-blue-50 px-20 py-6">
@@ -8,36 +11,49 @@ const Discover: React.FC = () => {
                     EXPLORE IDE USAHA BERKUALITAS
                 </div>
                 <div className="font-poppins font-light text-md text-slate-600 mt-1">
-                Temukan berbagai ide usaha yang berkualitas dan inovatif. Dengan beragam pilihan yang tersedia, Anda dapat mengeksplorasi peluang usaha yang sesuai dengan kriteria Anda dan kebutuhan pasar. Bersama kami, wujudkan portofolio bisnis Anda dengan ide-ide yang berdaya saing tinggi dan penuh potensi.
+                    Temukan berbagai ide usaha yang berkualitas dan inovatif. Dengan beragam pilihan yang tersedia, Anda dapat mengeksplorasi peluang usaha yang sesuai dengan kriteria Anda dan kebutuhan pasar. Bersama kami, wujudkan portofolio bisnis Anda dengan ide-ide yang berdaya saing tinggi dan penuh potensi.
                 </div>
             </div>
             <div className="mx-12">
-                
-
-<div className="sm:hidden">
-    <label htmlFor="tabs" className="sr-only">Select your country</label>
-    <select id="tabs" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option>Profile</option>
-        <option>Dashboard</option>
-        <option>setting</option>
-        <option>Invoioce</option>
-    </select>
-</div>
-<ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
-    <li className="w-full focus-within:z-10">
-        <a href="#" className="inline-block w-full p-4 text-gray-900 bg-gray-100 border-r border-gray-200 dark:border-gray-700 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white" aria-current="page">Profile</a>
-    </li>
-    <li className="w-full focus-within:z-10">
-        <a href="#" className="inline-block w-full p-4 bg-white border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Dashboard</a>
-    </li>
-    <li className="w-full focus-within:z-10">
-        <a href="#" className="inline-block w-full p-4 bg-white border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Settings</a>
-    </li>
-    <li className="w-full focus-within:z-10">
-        <a href="#" className="inline-block w-full p-4 bg-white border-s-0 border-gray-200 dark:border-gray-700 rounded-e-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Invoice</a>
-    </li>
-</ul>
-
+                <div>
+                    <div className="w-full h-12 rounded-t-md bg-yellow-300 mt-6 flex justify-between">
+                        <div className="flex">
+                            <div
+                                className={`h-12 flex justify-center items-center font-bold text-white w-40 text-center border-r-2 border-white cursor-pointer ${activeTab === 'BERLANGSUNG' ? 'bg-green-500 rounded-tl-md' : 'bg-green-700'}`}
+                                onClick={() => setActiveTab('BERLANGSUNG')}
+                            >
+                                BERLANGSUNG
+                            </div>
+                            <div
+                                className={`h-12 flex justify-center items-center font-bold text-white w-40 text-center border-x-2 border-white cursor-pointer ${activeTab === 'MENDATANG' ? 'bg-green-500' : 'bg-green-700'}`}
+                                onClick={() => setActiveTab('MENDATANG')}
+                            >
+                                MENDATANG
+                            </div>
+                            <div
+                                className={`h-12 flex justify-center items-center font-bold text-white w-40 text-center border-l-2 border-white cursor-pointer ${activeTab === 'SELESAI' ? 'bg-green-500' : 'bg-green-700'}`}
+                                onClick={() => setActiveTab('SELESAI')}
+                            >
+                                SELESAI
+                            </div>
+                        </div>
+                        <div>
+                            <div className="h-12 flex justify-center items-center bg-green-700 font-bold text-white w-40 text-center rounded-tr-md">
+                                Filter
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-b-md mb-12">
+                        {activeTab === 'BERLANGSUNG' && 
+                            <div className="w-full">
+                                <CampaignCard />
+                                <CampaignCard />
+                            </div>
+                        }
+                        {activeTab === 'MENDATANG' && <div>Konten Mendatang</div>}
+                        {activeTab === 'SELESAI' && <div>Konten Selesai</div>}
+                    </div>
+                </div>
             </div>
         </div>
     );

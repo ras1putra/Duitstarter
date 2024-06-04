@@ -21,13 +21,14 @@ CREATE TYPE kyc_status_enum AS ENUM ('PENDING', 'REVIEWED');
 
 CREATE TABLE IF NOT EXISTS kyc_level_1
 (
-    kyc_level_1_id uuid NOT NULL PRIMARY KEY,
+    kyc_level_1_id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL UNIQUE,
     full_name VARCHAR(200) NOT NULL,
+    jenis_kelamin VARCHAR(16) NOT NULL,
     nik VARCHAR(16) NOT NULL,
     tanggal_lahir date NOT NULL,
     status kyc_status_enum NOT NULL DEFAULT 'PENDING',
-    "isAproved" boolean NOT NULL DEFAULT false,
+    "isApproved" boolean,
     "createdAt" timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     "statusUpdate" VARCHAR(256)
@@ -35,7 +36,7 @@ CREATE TABLE IF NOT EXISTS kyc_level_1
 
 CREATE TABLE IF NOT EXISTS foto_dokumen
 (
-    foto_dokumen_id uuid NOT NULL PRIMARY KEY,
+    foto_dokumen_id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     foto_ktp_depan bytea NOT NULL,
     foto_ktp_belakang bytea NOT NULL,
     foto_selfie bytea NOT NULL,
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS foto_dokumen
 
 CREATE TABLE IF NOT EXISTS address
 (
-    address_id uuid NOT NULL PRIMARY KEY,
+    address_id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     address VARCHAR(200) NOT NULL,
     kecamatan VARCHAR(40) NOT NULL,
     kota VARCHAR(40) NOT NULL,
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS address
     kode_pos VARCHAR(40) NOT NULL,
     kyc_level_1_id uuid NOT NULL UNIQUE
 );
+
 
 
 CREATE TABLE IF NOT EXISTS kyc_level_2

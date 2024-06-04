@@ -8,7 +8,7 @@ datasource db {
 }
 
 model address {
-  address_id     String      @id @db.Uuid
+  address_id     String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   address        String      @db.VarChar(200)
   kecamatan      String      @db.VarChar(40)
   kota           String      @db.VarChar(40)
@@ -180,7 +180,7 @@ model document_proposal {
 }
 
 model foto_dokumen {
-  foto_dokumen_id   String      @id @db.Uuid
+  foto_dokumen_id   String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   foto_ktp_depan    Bytes
   foto_ktp_belakang Bytes
   foto_selfie       Bytes
@@ -206,16 +206,17 @@ model investment {
 }
 
 model kyc_level_1 {
-  kyc_level_1_id String          @id @db.Uuid
+  kyc_level_1_id String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   user_id        String          @unique @db.Uuid
   full_name      String          @db.VarChar(200)
   nik            String          @db.VarChar(16)
   tanggal_lahir  DateTime        @db.Date
   status         kyc_status_enum @default(PENDING)
-  isAproved      Boolean         @default(false)
   createdAt      DateTime        @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime?       @default(now()) @db.Timestamptz(6)
   statusUpdate   String?         @db.VarChar(256)
+  jenis_kelamin  String          @db.VarChar(16)
+  isaproved      Boolean?
   address        address?
   foto_dokumen   foto_dokumen?
   user           user            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)

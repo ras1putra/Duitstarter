@@ -84,3 +84,33 @@ AFTER INSERT ON "user"
 FOR EACH ROW
 EXECUTE FUNCTION set_username_from_email();
 
+CREATE OR REPLACE FUNCTION update_kyc_level_1_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW."updatedAt" = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Membuat trigger untuk memperbarui updatedAt di kyc_level_1
+CREATE TRIGGER trg_update_kyc_level_1_updated_at
+AFTER INSERT OR UPDATE ON kyc_level_1
+FOR EACH ROW
+EXECUTE FUNCTION update_kyc_level_1_updated_at();
+
+-- Membuat fungsi untuk memperbarui isVerified di tabel user
+CREATE OR REPLACE FUNCTION update_user_is_verified()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW."isApproved" = true THEN
+        UPDATE "user" SET "isVerified" = true WHERE user_id = NEW.user_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Membuat trigger untuk memperbarui isVerified di tabel user
+CREATE TRIGGER trg_update_user_is_verified
+AFTER INSERT OR UPDATE ON kyc_level_1
+FOR EACH ROW
+EXECUTE FUNCTION update_user_is_verified();

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 import duitstarterLogo from '../assets/duitstarter.svg';
 import kycLogoq1 from '../assets/identification-16-solid.svg';
 import kycLogoq2 from '../assets/id-card (1).svg';
@@ -13,6 +13,7 @@ const navbarHorizontal = "w-full h-16 shadow-lg px-12 flex items-center justify-
 const navbarVertical = "h-screen shadow-2xl flex flex-col items-center py-8 transition-width duration-300 bg-white fixed";
 
 const Navbar: React.FC<{ user: any, toggleNavbar: () => void }> = ({ user, toggleNavbar }) => {
+    const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -63,6 +64,7 @@ const Navbar: React.FC<{ user: any, toggleNavbar: () => void }> = ({ user, toggl
                 sessionStorage.removeItem('user');
                 setSuccessMessage("Berhasil logout");
                 setInterval(() => {
+                    navigate('/');
                     window.location.reload();
                 }, 2000);
             }
@@ -167,7 +169,7 @@ const Navbar: React.FC<{ user: any, toggleNavbar: () => void }> = ({ user, toggl
                             <>
                                 <Link to="/" className="text-slate-500 hover:text-gray-700 font-semibold text-md hover:border-b-2 border-gray-700 ">Discover</Link>
                                 <Link to="/" className="text-slate-500 hover:text-gray-700 font-semibold text-md hover:border-b-2 border-gray-700 ">Portofolio</Link>
-                                <Link to="/" className="text-slate-500 hover:text-gray-700 font-semibold text-md hover:border-b-2 border-gray-700 ">Buat Campaign</Link>
+                                <Link to="/create-campaign" className="text-slate-500 hover:text-gray-700 font-semibold text-md hover:border-b-2 border-gray-700 ">Buat Campaign</Link>
                                 <Link to="/" className="text-slate-500 hover:text-gray-700 font-semibold text-md hover:border-b-2 border-gray-700 ">Community</Link>
                             </>
                         )}

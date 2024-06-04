@@ -1,11 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import duitstarterLogo from '../assets/duitstarter.svg';
 
-
 const LoginRegisterNavbar: React.FC = () => {
+    const [isSticky, setIsSticky] = useState(false);
+    const location = useLocation();
+    const isHomePage = location.pathname === '/';
+
+    const handleScroll = () => {
+        if (window.scrollY > 0) {
+            setIsSticky(true);
+        } else {
+            setIsSticky(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isHomePage) {
+            window.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (isHomePage) {
+                window.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [isHomePage]);
+
     return (
-        <nav className='w-full h-16 shadow-xl flex items-center justify-between px-12 z-40 bg-white fixed bg-opacity-80'>
+        <nav className={`w-full h-16 shadow-xl flex items-center justify-between px-12 z-40 ${isHomePage ? "bg-white" : 'bg-white bg-opacity-80 fixed'} ${ isSticky ? 'fixed top-0' : " "}`}>
             <div className="flex items-center justify-between">
                 <Link to="/" className="flex items-center">
                     <img src={duitstarterLogo} alt="Duitstarter logo" className="h-12 w-12" />
