@@ -1,0 +1,52 @@
+
+.register-container {
+    background-image: url("../Assets/public/waves.svg"); 
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    z-index: 1;
+}
+
+.glass-morphism {
+    backdrop-filter: blur(80px); 
+    box-shadow: 0 2px 2px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(20px); 
+    border: 1px solid rgba(255, 255, 255, 0.18); 
+    backdrop-filter: blur(20px); 
+}
+
+.or-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid white;
+}
+
+.or-divider::before {
+    margin-right: 10px;
+}
+
+.or-divider::after {
+    margin-left: 10px;
+}
+
+.or-divider span {
+    font-size: 14px;
+    color: white;
+}
+
+.login-container {
+    background-image: url("../Assets/public/waves.svg"); 
+    background-size: cover;
+    background-position: center; 
+    height: 100vh;
+    top: 0;
+}
+
