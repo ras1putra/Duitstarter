@@ -7,9 +7,10 @@ const AuthNavbar = () => {
     const pathname = usePathname();
     const isRegister = pathname === '/register';
     const isLogin = pathname === '/login';
+    const isHome = pathname === '/';
 
     return (
-        <div className='fixed h-14 md:h-16 bg-white bg-opacity-80 md:bg-opacity-60 shadow-lg w-full z-10'>
+        <div className={`${isHome? "" : "fixed"} h-14 md:h-16 bg-white bg-opacity-80 md:bg-opacity-60 shadow-lg w-full z-50`}>
             <div className="px-4 md:px-12 flex flex-row justify-between items-center">
                 <Link href="/" className="flex flex-row items-center">
                     <Image src={DuitstarterLightLogo} alt="Duitstarter light mode logo" className="w-14 h-14 md:w-16 md:h-16" />
